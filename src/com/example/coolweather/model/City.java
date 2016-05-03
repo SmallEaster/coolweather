@@ -1,4 +1,4 @@
-package model;
+package com.example.coolweather.model;
 
 import android.R.integer;
 

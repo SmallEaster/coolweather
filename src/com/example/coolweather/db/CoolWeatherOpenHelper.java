@@ -1,4 +1,4 @@
-package db;
+package com.example.coolweather.db;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
@@ -33,7 +33,7 @@ public class CoolWeatherOpenHelper extends SQLiteOpenHelper{
 	@Override
 	public void onCreate(SQLiteDatabase db) {
 		// TODO Auto-generated method stub
-		db.execSQL(CREATE_PROVICE);
+		db.execSQL(CREATE_PROVINCE);
 		db.execSQL(CREATE_CITY);
 		db.execSQL(CREATE_COUNTY);
 	}
