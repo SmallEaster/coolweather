@@ -1,5 +1,6 @@
 package com.example.coolweather.activity;
 
+import com.example.coolweather.service.AutoUpdateService;
 import com.example.coolweather.util.HttpCallbackListener;
 import com.example.coolweather.util.HttpUtil;
 import com.example.coolweather.util.Utility;
@@ -84,6 +85,8 @@ public class WeatherActivity extends Activity implements OnClickListener{
 			//显示本地天气
 			showWeather();
 		}
+		
+		
 	}
 	
 
@@ -99,6 +102,9 @@ public class WeatherActivity extends Activity implements OnClickListener{
 		currentDateText.setText(prefs.getString("current_date", ""));
 		weatherInfoLayout.setVisibility(View.VISIBLE);
 		cityNameText.setVisibility(View.VISIBLE);
+		
+		Intent intent=new Intent(WeatherActivity.this, AutoUpdateService.class);
+		startService(intent);
 	}
 
 	private void queryWeatherCode(String countyCode) {
