@@ -17,7 +17,10 @@ import com.example.coolweather.util.Utility;
 import android.R;
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -49,10 +52,20 @@ public class ChooseAreaActivity extends Activity{
 	private Province selectedProvince;
 	private City selectedCity;
 	private int currentLevel;
+	private boolean isFromWeatherActivity;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
+		isFromWeatherActivity=getIntent().getBooleanExtra("from_weather_activity", false);
+		SharedPreferences prefs=PreferenceManager.getDefaultSharedPreferences(this);
+		if (prefs.getBoolean("city_selected", false)&&!isFromWeatherActivity) {
+			Intent intent = new Intent(this, WeatherActivity.class);
+			startActivity(intent);
+			finish();
+			return;
+		}
+		
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(com.example.coolweather.R.layout.choose_area);
 		
@@ -73,6 +86,12 @@ public class ChooseAreaActivity extends Activity{
 				}else if (currentLevel==LEVEL_CITY) {
 					selectedCity = cityList.get(position);
 					queryCounties();
+				}else if (currentLevel==LEVEL_COUNTY) {
+					String countyCode=countyList.get(position).getCountyCode();
+					Intent intent=new Intent(ChooseAreaActivity.this, WeatherActivity.class);
+					intent.putExtra("county_code", countyCode);
+					startActivity(intent);
+					finish();
 				}
 			}
 
@@ -116,7 +135,7 @@ public class ChooseAreaActivity extends Activity{
 		}
 	}
 	
-	private void queryCounties() {
+	public void queryCounties() {
 		// TODO Auto-generated method stub
 		countyList=coolWeatherDB.loadCounties(selectedCity.getId());
 		if (countyList.size()>0) {
@@ -214,6 +233,10 @@ public class ChooseAreaActivity extends Activity{
 		else if (currentLevel==LEVEL_CITY) {
 			queryProvinces();
 		}else {
+			if (isFromWeatherActivity) {
+				Intent intent = new Intent(this, WeatherActivity.class);
+				startActivity(intent);
+				}
 			finish();
 		}
 	}	
